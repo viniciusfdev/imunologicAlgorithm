@@ -50,8 +50,8 @@ class Population:
         tx_mut = math.exp(-self.ro * abs(idv.fitness / best.fitness))
         
         return Individual(
-            random.uniform(-10, 10) if random.uniform(0, 1) < tx_mut else idv.x,
-            random.uniform(-10, 10) if random.uniform(0, 1) < tx_mut else idv.y)
+            idv.x + random.uniform(-5, 5) if random.uniform(0, 1) < tx_mut else idv.x,
+            idv.y + random.uniform(-5, 5) if random.uniform(0, 1) < tx_mut else idv.y)
 
     def clone_by_fitness(self, population) -> list:
       """
@@ -131,32 +131,32 @@ class Population:
                 clones.append(self.get_best(m_sub_clones))
 
             pop = pop[:-self.n1] + clones
-            
+        
         return pop
       
 
 if __name__ == "__main__":
-    pop = Population(50, 50, n1 = 50)
+    pop = Population(50, 100, n1 = 50, ro=2)
     init_time = time.time()
     final_result = pop.run()
 
     print("População final:\n {}".format(final_result))
-    # print("Execution time: {}".format(time.time() - init_time))
+    print("Execution time: {}".format(time.time() - init_time))
 
-    # gen_dist = range(len(pop.path["best"])-1)
-    # best_line = np.linspace(0, len(pop.path["best"]))
+    gen_dist = range(len(pop.path["best"]))
+    best_line = np.linspace(0, len(pop.path["best"]))
 
-    # # second poly fit to plot the aproximation
-    # best_model = np.poly1d(np.polyfit(gen_dist, pop.path["best"], 3))
-    # worst_model = np.poly1d(np.polyfit(gen_dist, pop.path["worst"], 3))
-    # average_model = np.poly1d(np.polyfit(gen_dist, pop.path["average"], 3))
+    # second poly fit to plot the aproximation
+    best_model = np.poly1d(np.polyfit(gen_dist, pop.path["best"], 3))
+    worst_model = np.poly1d(np.polyfit(gen_dist, pop.path["worst"], 3))
+    average_model = np.poly1d(np.polyfit(gen_dist, pop.path["average"], 3))
     
-    # plt.plot(best_line, best_model(best_line), 'g', label='Best')
-    # plt.plot(best_line, worst_model(best_line), 'r', label='Worst')
-    # plt.plot(best_line, average_model(best_line), 'b', label='Average')
+    plt.plot(best_line, best_model(best_line), 'g', label='Best')
+    plt.plot(best_line, worst_model(best_line), 'r', label='Worst')
+    plt.plot(best_line, average_model(best_line), 'b', label='Average')
 
-    # plt.legend(['Best', 'Worst', 'Average'])
+    plt.legend(['Best', 'Worst', 'Average'])
 
-    # plt.xlabel('generations')
-    # plt.ylabel('fitness')
-    # plt.show()
+    plt.xlabel('generations')
+    plt.ylabel('fitness')
+    plt.show()
